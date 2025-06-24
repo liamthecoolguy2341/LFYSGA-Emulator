@@ -1,0 +1,10 @@
+body {
+    background: #001010;
+    color:silver;
+    font-family: "Courier New", monospace;
+    text-align: center;
+}
+textarea{
+    background-color:black;
+    color:#39FF14;
+}
