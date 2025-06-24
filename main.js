@@ -1,0 +1,78 @@
+let r1 = "00000000"
+      const canvas = document.getElementById("screen");
+      const ctx = canvas.getContext("2d");
+      const pixelSize = 2;
+
+
+      const dp = (x, y, color) => {
+        ctx.fillStyle = color;
+        ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+      };
+
+
+      document.getElementById("in").addEventListener("change", function () {
+        const file = this.files[0];
+        if (!file) return;
+
+
+        const reader = new FileReader();
+
+
+        reader.onload = function (e) {
+          const lines = e.target.result.split(/\r?\n/);
+
+
+          if (lines.length < 1 || lines[1].length < 16) {
+            document.getElementById("output").innerHTML = "ROM format invalid or too short.";
+            return;
+          }
+
+
+          const func = lines[1].slice(0, 8);
+          const in1 = lines[1].slice(8, 12);
+          const in2 = lines[1].slice(12);
+
+
+          if (func === "11111111") {
+            const i1 = parseInt(in1, 2);
+            const i2 = parseInt(in2, 2);
+            dp(i1, i2, "green");
+          }
+          if (func === "00000011") {
+            const i1 = parseInt(in1,2);
+            const i2 = parseInt(in2,2);
+            r1 = i1 + i2;
+          }
+          if (func === "00000001"){
+            const i1 = parseInt(in1,2);
+            const i2 = parseInt(in2,2);
+            r1 = i1 - i2;
+          }
+          if(func === "00000000"){
+            const i1 = parseInt(in1,2);
+            const i2 = parseInt(in2,2);
+            dp(i1,i2, #202f20)
+          }
+          document.getElementById("output").innerHTML = "<pre>" + e.target.result + "</pre>";
+        };
+
+
+        reader.readAsText(file);
+      });
+      document.getElementById("downloadBtn").addEventListener("click", function () {
+        const text = document.getElementById("textBox").value;
+
+
+        if (text.trim() === "") {
+          alert("No text inputted");
+          return;
+        }
+        const blob = new Blob([text], { type: "text/plain" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "Rom.txt";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+      });
