@@ -2,6 +2,8 @@
 <html>
 <head>
   <title>LFYSGA Emulator Online</title>
+  <img src="image.gif">
+  <h1>Welcome to the LFYSGA development website!</h1>
   <style>
     body {
       background: #001010;
@@ -25,7 +27,7 @@
   <h2>Choose or Upload a Binary ROM</h2>
   <select id="romSelect">
     <option value="">-- Select a ROM --</option>
-    <option value="1111111100010010">Draw Green Pixel</option>
+    <option value="1111111100010010">Draw Pixel</option>
     <option value="0000001100100001">Add Example</option>
     <option value="0000000101000011">Subtract Example</option>
   </select><br><br>
@@ -70,7 +72,7 @@
       const i2 = parseInt(in2, 2);
 
       if (func === "11111111") {
-        dp(i1, i2, "green");
+        dp(i1, i2, "#39FF16");
       } else if (func === "00000011") {
         r1 = i1 + i2;
       } else if (func === "00000001") {
