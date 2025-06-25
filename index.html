@@ -60,7 +60,7 @@
 
       const lines = data.split(/\r?\n/);
 
-      if (lines.length < 2 || lines[1].length < 16) {
+      if (lines.length < 1 || lines[1].length < 16) {
         document.getElementById("output").innerHTML = "ROM format invalid or too short.";
         return;
       }
