@@ -88,7 +88,13 @@
           r1 = i1 - i2;
         } else if (func === "00000000") {
           dp(i1, i2, "#202f20");
-        } 
+        } else if (func === "11111110"){
+          if (i1 === "0001")){
+            rx = r1.slice(8,12);
+            ry = r1.slice(12);
+            dp(rx,ry,"green");
+          }
+        }
       }
 
       document.getElementById("output").innerHTML = "<pre>" + data + "</pre>";
@@ -127,6 +133,7 @@
     }
   </script>
   <p> </p>
+  <p></p>
   <p></p>
   <p></p>
 </body>
