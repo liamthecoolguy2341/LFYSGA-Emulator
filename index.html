@@ -45,7 +45,7 @@
   <button onclick="downloadROM()">Download Text</button>
   <div id="output"></div>
   <script>
-    let r1 = 0;
+    let storage = [];
     const canvas = document.getElementById("screen");
     const ctx = canvas.getContext("2d");
     const pixelSize = 16;
@@ -83,17 +83,13 @@
         if (func === "11111111") {
           dp(i1, i2, "green");
         } else if (func === "00000011") {
-          r1 = i1 + i2;
+          storage.push(i1 + i2);
         } else if (func === "00000001") {
-          r1 = i1 - i2;
+          storage.push(i1 - i2);
         } else if (func === "00000000") {
           dp(i1, i2, "#202f20");
         } else if (func === "11111110"){
-          if (i1 === "0001")){
-            rx = r1.slice(8,12);
-            ry = r1.slice(12);
-            dp(rx,ry,"green");
-          }
+          dp(storage[i1],storage[i2], "green");
         }
       }
 
@@ -133,6 +129,7 @@
     }
   </script>
   <p> </p>
+  <p></p>
   <p></p>
   <p></p>
   <p></p>
