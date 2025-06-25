@@ -19,18 +19,15 @@
       margin-top: 10px;
     }
   </style>
-  <link type="icon" href="favicon.png">
-  <link type="shortcut icon" href="favicon.png">
 </head>
 <body>
-  <img src="img.gif" alt="Welcome to the LFYSGA dev">
   <canvas id="screen" width="255" height="240" style="border:1px solid black; background-color: #202f20;"></canvas>
   <h2>Choose or Upload a Binary ROM</h2>
   <select id="romSelect">
     <option value="">-- Select a ROM --</option>
-    <option value="1111111100010010">Draw Pixel</option>
-    <option value="0000001100100001">Add Example</option>
-    <option value="0000000101000011">Subtract Example</option>
+    <option value="ROM Multi\n1111111100010010\n1111111100100011\n1111111100110100">Draw 3 Green Pixels</option>
+    <option value="ROM Add\n0000001100010001\n0000001100100010">Add Examples</option>
+    <option value="ROM Sub\n0000000100110001\n0000000100010010">Subtract Examples</option>
   </select><br><br>
 
   <input type="file" id="in"><br><br>
@@ -55,31 +52,34 @@
 
     function runROM(data) {
       if (!data.trim()) return;
-
-      clearCanvas(); // Always reset screen before drawing
+      clearCanvas();
 
       const lines = data.split(/\r?\n/);
-
-      if (lines.length != 0 || lines[1].length < 16) {
-        document.getElementById("output").innerHTML = "ROM format invalid or too short.";
+      if (lines.length < 2) {
+        document.getElementById("output").innerHTML = "ROM format is too short.";
         return;
       }
 
-      const func = lines[1].slice(0, 8);
-      const in1 = lines[1].slice(8, 12);
-      const in2 = lines[1].slice(12);
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i];
+        if (line.length < 16) continue;
 
-      const i1 = parseInt(in1, 2);
-      const i2 = parseInt(in2, 2);
+        const func = line.slice(0, 8);
+        const in1 = line.slice(8, 12);
+        const in2 = line.slice(12);
 
-      if (func === "11111111") {
-        dp(i1, i2, "#39FF16");
-      } else if (func === "00000011") {
-        r1 = i1 + i2;
-      } else if (func === "00000001") {
-        r1 = i1 - i2;
-      } else if (func === "00000000") {
-        dp(i1, i2, "#202f20");
+        const i1 = parseInt(in1, 2);
+        const i2 = parseInt(in2, 2);
+
+        if (func === "11111111") {
+          dp(i1, i2, "green");
+        } else if (func === "00000011") {
+          r1 = i1 + i2;
+        } else if (func === "00000001") {
+          r1 = i1 - i2;
+        } else if (func === "00000000") {
+          dp(i1, i2, "#202f20");
+        }
       }
 
       document.getElementById("output").innerHTML = "<pre>" + data + "</pre>";
