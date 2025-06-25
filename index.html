@@ -41,18 +41,9 @@
         ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
       };
 
-      document.getElementById("in").addEventListener("change", function () {
-        const file = this.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-          runROM(e.target.result);
-        };
-
-        reader.readAsText(file);
-      });
+      function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
 
       function runROM(data) {
         const lines = data.split(/\r?\n/);
@@ -82,6 +73,19 @@
         document.getElementById("output").innerHTML = "<pre>" + data + "</pre>";
       }
 
+      document.getElementById("in").addEventListener("change", function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          runROM(e.target.result);
+        };
+
+        reader.readAsText(file);
+      });
+
       function downloadROM() {
         const text = document.getElementById("textbox").value;
         const blob = new Blob([text], { type: "text/plain" });
@@ -91,6 +95,14 @@
         a.click();
         URL.revokeObjectURL(a.href);
       }
+      setInterval(() => {
+        clearCanvas();
+
+        const textboxData = document.getElementById("textbox").value;
+        if (textboxData) {
+          runROM(textboxData);
+        }
+      }, 1000);
     </script>
   </body>
 </html>
