@@ -10,8 +10,6 @@
     <input type="file" id="in">
     <div id="output"></div>
     <h4>Write your own code!</h4>
-    <textarea id="textBox" rows="10" cols="40" placeholder="Type your code here..."></textarea><br><br>
-    <button id="downloadBtn">Download ROM as .txt</button>
     <script>
       let r1 = "00000000"
       const canvas = document.getElementById("screen");
@@ -74,22 +72,6 @@
 
         reader.readAsText(file);
       });
-      document.getElementById("downloadBtn").addEventListener("click", function () {
-        const text = document.getElementById("textBox").value;
-
-
-        if (text.trim() === "") {
-          alert("No text inputted");
-          return;
-        }
-        const blob = new Blob([text], { type: "text/plain" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "Rom.txt";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(link.href);
-      });</script>
+      </script>
   </body>
 </html>
