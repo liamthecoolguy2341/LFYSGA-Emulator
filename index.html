@@ -53,7 +53,7 @@
     function runROM(data) {
       if (!data.trim()) return;
 
-      clearCanvas();
+      clearCanvas(); // Always reset screen before drawing
 
       const lines = data.split(/\r?\n/);
 
@@ -87,8 +87,9 @@
       if (!file) return;
       const reader = new FileReader();
       reader.onload = function (e) {
-        document.getElementById("textbox").value = e.target.result;
-        runROM(e.target.result);
+        const romData = e.target.result;
+        document.getElementById("textbox").value = romData;
+        runROM(romData);
       };
       reader.readAsText(file);
     });
