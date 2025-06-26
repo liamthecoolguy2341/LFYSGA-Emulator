@@ -24,28 +24,23 @@
 </head>
 <body>
   <canvas id="screen" width="256" height="256" style="border:1px solid black; background-color: #202f20;"></canvas><br>
-   <img src="img.gif" alt=" ">
+  <br>
+  <img src="img.gif" alt="Emulator Logo"><br><br>
+
   <h2>Choose or Upload a Binary ROM</h2>
   <select id="romSelect">
     <option value="">-- Select a ROM --</option>
-    <option value="
-
-1111111100100011 
-1111111100110100
-1111111100010010">Draw 3 Green Pixels</option>
-    <option value="
-0000001100010001
-0000001100100010">Add Examples</option>
-    <option value="
-0000000100110001
-0000000100010010">Subtract Examples</option>
+    <option value="ROM\n1111111100100011\n1111111100110100\n1111111100010010">Draw 3 Green Pixels</option>
+    <option value="ROM\n0000001100010001\n0000001100100010">Add Examples</option>
+    <option value="ROM\n0000000100110001\n0000000100010010">Subtract Examples</option>
   </select><br><br>
+
   <input type="file" id="in"><br><br>
   <textarea id="textbox" placeholder="Or type your binary ROM here..."></textarea><br>
   <button onclick="downloadROM()">Download Text</button>
   <div id="output"></div>
+
   <script>
-    let storage = [];
     const canvas = document.getElementById("screen");
     const ctx = canvas.getContext("2d");
     const pixelSize = 16;
@@ -62,17 +57,16 @@
     function runROM(data) {
       if (!data.trim()) return;
       clearCanvas();
+      let storage = [];
 
-      const lines = data.split(/\r?\n/);
-      if (lines.length < 2) {
+      const lines = data.split(/\r?\n/).map(line => line.trim()).filter(line => line.length >= 16);
+
+      if (lines.length < 1) {
         document.getElementById("output").innerHTML = "ROM format is too short.";
         return;
       }
 
-      for (let i = 1; i < lines.length; i++) {
-        const line = lines[i];
-        if (line.length < 16) continue;
-
+      for (const line of lines) {
         const func = line.slice(0, 8);
         const in1 = line.slice(8, 12);
         const in2 = line.slice(12);
@@ -88,8 +82,8 @@
           storage.push(i1 - i2);
         } else if (func === "00000000") {
           dp(i1, i2, "#202f20");
-        } else if (func === "11111110"){
-          dp(storage[i1],storage[i2], "green");
+        } else if (func === "11111110") {
+          dp(storage[i1] || 0, storage[i2] || 0, "green");
         }
       }
 
@@ -128,11 +122,10 @@
       URL.revokeObjectURL(a.href);
     }
   </script>
+
   <p>00000011 : add</p>
   <p>00000001 : sub</p>
-  <p>11111111 : drw</p>
-  <p>11111110 : dws</p>
-  <p></p>
-  <p></p>
+  <p>11111111 : drw (draw pixel)</p>
+  <p>11111110 : dws (draw from storage)</p>
 </body>
 </html>
