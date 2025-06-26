@@ -48,6 +48,7 @@
   <div id="output"></div>
 
   <script>
+    let cst = []
     const canvas = document.getElementById("screen");
     const ctx = canvas.getContext("2d");
     const pixelSize = 16;
@@ -77,7 +78,7 @@
         const func = line.slice(0, 8);
         const in1 = line.slice(8, 12);
         const in2 = line.slice(12);
-
+        cst.push(line);
         const i1 = parseInt(in1, 2);
         const i2 = parseInt(in2, 2);
 
@@ -91,6 +92,8 @@
           dp(i1, i2, "#202f20");
         } else if (func === "11111110") {
           dp(storage[i1] || 0, storage[i2] || 0, "green");
+        } else if (func === "00000111") {
+          line = parseInt(in1+in2, 2);
         }
       }
 
@@ -134,5 +137,6 @@
   <p>00000001 : sub</p>
   <p>11111111 : drw (draw pixel)</p>
   <p>11111110 : dws (draw from storage)</p>
+  <p>00000111 : jp (loop)</p>
 </body>
 </html>
