@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+`<!DOCTYPE html>
 <html>
 <head>
   <title>LFYSGA Emulator</title>
@@ -91,6 +91,7 @@
 
         await sleep(250);
         pc++;
+        alert('pc: ${pc}, RAM[0]: ${RAM[0]}');
       }
 
       document.getElementById("output").innerHTML = "<pre>" + data + "</pre>";
