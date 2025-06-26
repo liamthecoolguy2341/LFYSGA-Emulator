@@ -89,7 +89,7 @@
             pc = ((x << 8) | y) - 1;
             break;
         }
-        document.getElementById("debug").innerText ='pc: ${pc}\nRAM[0]: ${RAM[0]}\nRAM[1]: ${RAM[1]}\nRAM[2]: ${RAM[2]}';
+        document.getElementById("debug").innerText =`pc: ${pc}\nRAM[0]: ${RAM[0]}\nRAM[1]: ${RAM[1]}\nRAM[2]: ${RAM[2]}`;
         await sleep(250);
         pc++;
       }
