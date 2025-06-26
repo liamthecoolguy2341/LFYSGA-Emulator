@@ -23,6 +23,7 @@
   <link rel="shortcut icon" href="img.gif" type="image/gif">
 </head>
 <body>
+  <div id="debug" style="margin-top: 20px; font-family: monospace; color: lime;"></div><br>
   <canvas id="screen" width="256" height="256" style="border:1px solid black; background-color: #202f20;"></canvas><br><br>
   <h2>Upload or Paste Binary ROM</h2>
   <input type="file" id="in"><br><br>
@@ -88,10 +89,9 @@
             pc = ((x << 8) | y) - 1;
             break;
         }
-
+        document.getElementById("debug").innerText ='pc: ${pc}\nRAM[0]: ${RAM[0]}\nRAM[1]: ${RAM[1]}\nRAM[2]: ${RAM[2]}';
         await sleep(250);
         pc++;
-        alert('pc: ${pc}, RAM[0]: ${RAM[0]}');
       }
 
       document.getElementById("output").innerHTML = "<pre>" + data + "</pre>";
