@@ -72,8 +72,9 @@
           RAM[i] = RAM[adressx]+RAM[adressy] & 0xFF;
           
         } else if (op === "11111000"){
-          RAM[i] = RAM[adressx]-RAM[adressy] & 0xFF;
-          
+          RAM[i] = RAM[adressx]-RAM[adressy] & 0xFF;  
+        } else if (op === "00000001"){
+          line = cRAM[adressx]
         }
         i+=1;
       document.getElementById("output").innerHTML = "<pre>" + data + "</pre>";
