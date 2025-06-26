@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>LFYSGA Emulator Online</title>   
+  <title>LFYSGA Emulator</title>   
   <style>
     body {
       background: #001010;
@@ -19,44 +19,26 @@
       margin-top: 10px;
     }
   </style>
-  <link rel="shortcut icon" href="img.gif" type="image/gif">
-  <link rel="icon" href="img.gif" type="image/gif">
+  <link type="icon" href="img.gif">
+  <link type="shortcut icon" href="img.gif">
 </head>
 <body>
-  <canvas id="screen" width="256" height="256" style="border:1px solid black; background-color: #202f20;"></canvas><br>
-  <br>
-  <img src="img.gif" alt="Emulator Logo"><br><br>
-
-  <h2>Choose or Upload a Binary ROM</h2>
-  <select id="romSelect">
-    <option value="">-- Select a ROM --</option>
-    <option value="
-1111111100100011
-1111111100110100
-1111111100010010">Draw 3 Green Pixels</option>
-    <option value="
-0000001100010001
-0000001100100010">Add Examples</option>
-    <option value="
-0000000100110001
-0000000100010010">Subtract Examples</option>
-  </select><br><br>
-
+  <canvas id="screen" width="256" height="256" style="border:1px solid black; background-color: #202f20;"></canvas><br><br>
+  <img src="img.gif">
+  <h2>Upload or Type Binary ROM</h2>
   <input type="file" id="in"><br><br>
-  <textarea id="textbox" placeholder="Or type your binary ROM here..."></textarea><br>
+  <textarea id="textbox" placeholder="Each line = 24-bit binary: opcode (8) + X (8) + Y (8)"></textarea><br>
   <button onclick="downloadROM()">Download Text</button>
   <div id="output"></div>
 
   <script>
     const canvas = document.getElementById("screen");
     const ctx = canvas.getContext("2d");
-    const pixelSize = 16;
-    let constLines = [];
 
-    const dp = (x, y, color) => {
+    function dp(x, y, color) {
       ctx.fillStyle = color;
-      ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
-    };
+      ctx.fillRect(x, y, 1, 1);
+    }
 
     function clearCanvas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -65,44 +47,19 @@
     function runROM(data) {
       if (!data.trim()) return;
       clearCanvas();
-      let storage = [];
-      constLines = [];
+      const lines = data.split(/\r?\n/).map(l => l.trim()).filter(l => l.length === 24);
 
-      const rawLines = data.split(/\r?\n/);
-      const lines = rawLines.map(line => line.trim()).filter(line => line.length >= 16);
+      for (let line of lines) {
+        const op = line.slice(0, 8);
+        const x = parseInt(line.slice(8, 16), 2);
+        const y = parseInt(line.slice(16, 24), 2);
 
-      if (lines.length < 1) {
-        document.getElementById("output").innerHTML = "ROM format is too short.";
-        return;
-      }
-
-      for (let i = 0; i < lines.length; i++) {
-        let line = lines[i];
-        constLines.push(line);
-
-        const func = line.slice(0, 8);
-        const in1 = line.slice(8, 12);
-        const in2 = line.slice(12);
-
-        const i1 = parseInt(in1, 2);
-        const i2 = parseInt(in2, 2);
-
-        if (func === "11111111") {
-          dp(i1, i2, "green");
-        } else if (func === "00000011") {
-          storage.push(i1 + i2);
-        } else if (func === "00000001") {
-          storage.push(i1 - i2);
-        } else if (func === "00000000") {
-          dp(i1, i2, "#202f20");
-        } else if (func === "11111110") {
-          dp(storage[i1] || 0, storage[i2] || 0, "green");
-        } else if (func === "00000111") {
-          const target = parseInt(in1 + in2, 2);
-          if (!isNaN(target) && target >= 0 && target < lines.length) {
-            i = target - 1; // adjust for loop increment
-          }
+        if (op === "11111111") {
+          dp(x, y, "lime");
+        } else if (op === "00000000") {
+          dp(x, y, "#202f20"); // erase pixel
         }
+        // You can expand with more 24-bit opcodes here
       }
 
       document.getElementById("output").innerHTML = "<pre>" + data + "</pre>";
@@ -124,28 +81,15 @@
       runROM(this.value);
     });
 
-    document.getElementById("romSelect").addEventListener("change", function () {
-      const selectedROM = this.value;
-      document.getElementById("textbox").value = selectedROM;
-      runROM(selectedROM);
-    });
-
     function downloadROM() {
       const text = document.getElementById("textbox").value;
       const blob = new Blob([text], { type: "text/plain" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = "rom.txt";
+      a.download = "rom24bit.txt";
       a.click();
       URL.revokeObjectURL(a.href);
     }
   </script>
-
-  <p>00000011 : add</p>
-  <p>00000001 : sub</p>
-  <p>11111111 : drw (draw pixel)</p>
-  <p>11111110 : dws (draw from storage)</p>
-  <p>00000111 : jp (jump to line)</p>
-  <p>   </p>
 </body>
 </html>
