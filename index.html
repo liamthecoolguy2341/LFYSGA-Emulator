@@ -40,7 +40,7 @@
 
     function sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
-    }    
+    }
 
     function dp(x, y, color) {
       ctx.fillStyle = color;
@@ -51,7 +51,7 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    function runROM(data) {
+    async function runROM(data) {
       clearCanvas();
       RAM = new Uint8Array(256);
       ROM = data.split(/\r?\n/).map(line => line.trim()).filter(line => line.length === 24);
@@ -86,11 +86,11 @@
             pc = ((x << 8) | y) - 1;
             break;
         }
-        sleep(500);
+
+        document.getElementById("output").innerHTML = "<pre>" + ROM.slice(0, pc + 1).join('\n') + "</pre>";
+        await sleep(500);
         pc++;
       }
-
-      document.getElementById("output").innerHTML = "<pre>" + data + "</pre>";
     }
 
     document.getElementById("in").addEventListener("change", function () {
@@ -119,6 +119,5 @@
       URL.revokeObjectURL(a.href);
     }
   </script>
-  <p></p>
 </body>
 </html>
