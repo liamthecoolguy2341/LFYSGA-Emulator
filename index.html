@@ -27,10 +27,10 @@
   <img src="img.gif" alt="Logo"><br>
   <h2>Upload or Paste Binary ROM</h2>
   <input type="file" id="in"><br><br>
-  <textarea id="textbox" placeholder="Each line = 24-bit binary: opcode (8) + X (8) + Y (8)"></textarea><br>
+  <textarea id="textbox" ></textarea><br>
   <button onclick="downloadROM()">Download Text</button>
   <div id="output"></div>
-
+  <p></p>
   <script>
     const canvas = document.getElementById("screen");
     const ctx = canvas.getContext("2d");
