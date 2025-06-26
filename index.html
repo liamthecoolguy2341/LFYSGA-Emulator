@@ -38,6 +38,10 @@
     let RAM = new Uint8Array(256);
     let ROM = [];
 
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }    
+
     function dp(x, y, color) {
       ctx.fillStyle = color;
       ctx.fillRect(x, y, pixelSize, pixelSize);
@@ -82,7 +86,7 @@
             pc = ((x << 8) | y) - 1;
             break;
         }
-
+        sleep(500);
         pc++;
       }
 
