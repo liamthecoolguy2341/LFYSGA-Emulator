@@ -48,10 +48,10 @@
   <div id="output"></div>
 
   <script>
-    let cst = []
     const canvas = document.getElementById("screen");
     const ctx = canvas.getContext("2d");
     const pixelSize = 16;
+    let constLines = [];
 
     const dp = (x, y, color) => {
       ctx.fillStyle = color;
@@ -66,19 +66,24 @@
       if (!data.trim()) return;
       clearCanvas();
       let storage = [];
+      constLines = [];
 
-      const lines = data.split(/\r?\n/).map(line => line.trim()).filter(line => line.length >= 16);
+      const rawLines = data.split(/\r?\n/);
+      const lines = rawLines.map(line => line.trim()).filter(line => line.length >= 16);
 
       if (lines.length < 1) {
         document.getElementById("output").innerHTML = "ROM format is too short.";
         return;
       }
 
-      for (const line of lines) {
+      for (let i = 0; i < lines.length; i++) {
+        let line = lines[i];
+        constLines.push(line);
+
         const func = line.slice(0, 8);
         const in1 = line.slice(8, 12);
         const in2 = line.slice(12);
-        cst.push(line);
+
         const i1 = parseInt(in1, 2);
         const i2 = parseInt(in2, 2);
 
@@ -93,7 +98,10 @@
         } else if (func === "11111110") {
           dp(storage[i1] || 0, storage[i2] || 0, "green");
         } else if (func === "00000111") {
-          line = parseInt(in1+in2, 2);
+          const target = parseInt(in1 + in2, 2);
+          if (!isNaN(target) && target >= 0 && target < lines.length) {
+            i = target - 1; // adjust for loop increment
+          }
         }
       }
 
@@ -137,6 +145,6 @@
   <p>00000001 : sub</p>
   <p>11111111 : drw (draw pixel)</p>
   <p>11111110 : dws (draw from storage)</p>
-  <p>00000111 : jp (loop)</p>
+  <p>00000111 : jp (jump to line)</p>
 </body>
 </html>
