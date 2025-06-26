@@ -85,6 +85,9 @@
           case "00000111": // jp
             pc = ((x << 8) | y) - 1;
             break;
+          case "00000100": // movr RAM[x] = RAM[y]
+            RAM[x] = RAM[y];
+            break;
         }
 
         document.getElementById("output").innerHTML = "<pre>" + ROM.slice(0, pc + 1).join('\n') + "</pre>";
