@@ -25,7 +25,7 @@
   <link rel="shortcut icon" href="img.gif" type="image/gif">
 </head>
 <body>
-  <div id="debug" style="position:absolute; right:0; font-family: monospace; color: navy;background-color:gray;"></div><br>
+  <div id="debug" style="position:absolute; right:0; font-family: monospace; color: navy; background-color:gray;"></div><br>
   <canvas id="screen" width="256" height="256" style="border:1px solid black; background-color: #202f20;"></canvas><br><br>
   <h2>Upload or Paste Binary ROM</h2>
   <input type="file" id="in"><br><br>
@@ -78,7 +78,7 @@
           case "00000100": // movr
             RAM[x] = RAM[y];
             break;
-          case "11111110": // drw from RAM[x], RAM[y]
+          case "11111110": // drw from RAM
             dp(RAM[x], RAM[y], "lime");
             break;
           case "11111100": // add
@@ -90,8 +90,16 @@
           case "00000111": // jp
             pc = ((x << 8) | y) - 1;
             break;
+          case "00001000": // jp_repeat using RAM[10]
+            if (RAM[10] > 0) {
+              RAM[10]--;
+              pc = ((x << 8) | y) - 1;
+            }
+            break;
         }
-        document.getElementById("debug").innerText =`pc: ${pc}\nRAM[0]: ${RAM[0]}\nRAM[1]: ${RAM[1]}\nRAM[2]: ${RAM[2]}`;
+
+        document.getElementById("debug").innerText =
+          `pc: ${pc}\nRAM[0]: ${RAM[0]}\nRAM[10]: ${RAM[10]}`;
         await sleep(10);
         pc++;
       }
@@ -125,6 +133,7 @@
       URL.revokeObjectURL(a.href);
     }
   </script>
+
   <p>11111111 draw from x y</p>
   <p>11111110 draw from ram x y</p>
   <p>00000000 erase from x y</p>
@@ -132,7 +141,7 @@
   <p>11111000 subtract ram x y</p>
   <p>00000001 set ram x to y</p>
   <p>00000100 copy ram x to y</p>
-  <p>00000111 jp to code y</p>
-  <p></p>
+  <p>00000111 jump to x y</p>
+  <p>00001000 repeat jump to x y while RAM[10] > 0 (decrements RAM[10])</p>
 </body>
 </html>
